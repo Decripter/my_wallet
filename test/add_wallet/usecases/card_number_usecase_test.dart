@@ -3,10 +3,10 @@ import 'package:my_wallet/add_wallet/usecases/card_number_usecase.dart';
 import 'package:my_wallet/add_wallet/value_objects/card_number_value_object.dart.dart';
 
 void main() {
+  final usecase = CardNumerUsecase();
   group('REMOVE_MASK -> ', () {
     test('should return empty string', () {
       var cardWithText = CardNumber(value: 'its not a number');
-      final usecase = CardNumerUsecase();
       cardWithText = cardWithText.copyWith(
         value: usecase.removeMask(cardWithText),
       );
@@ -14,7 +14,6 @@ void main() {
     });
     test('should return string with "0000"', () {
       var dirtyCard = CardNumber(value: '*this txt will be removed0 0.0 --0');
-      final usecase = CardNumerUsecase();
       dirtyCard = dirtyCard.copyWith(
         value: usecase.removeMask(dirtyCard),
       );
@@ -26,7 +25,11 @@ void main() {
   group('CHECK_LENGTH -> ', () {
     test('should return false on 4 digits card', () {
       final cardWith4Digits = CardNumber(value: '1 2 3 -4 ');
-      final usecase = CardNumerUsecase();
+      final result = usecase.checkCorrectlyLength(cardWith4Digits);
+      expect(result, false);
+    });
+    test('should return false on 24 digits card', () {
+      final cardWith4Digits = CardNumber(value: '12222 000011112212000023 -4 ');
       final result = usecase.checkCorrectlyLength(cardWith4Digits);
       expect(result, false);
     });
@@ -34,11 +37,43 @@ void main() {
       final cardWith16Digits = CardNumber(value: '1111 2232 4431 0110');
       final usecase = CardNumerUsecase();
       final result = usecase.checkCorrectlyLength(cardWith16Digits);
-
+      expect(result, true);
+    });
+    test('should return true on 16 digits card even dirty', () {
+      final cardWith16DigitsDirty = CardNumber(value: '111q1q q2q2q3244310110');
+      final usecase = CardNumerUsecase();
+      final result = usecase.checkCorrectlyLength(cardWith16DigitsDirty);
       expect(result, true);
     });
   });
+
+  group('GET_LAST_DIGIT -> ', () {
+    test('should return 4 on the last digit', () {
+      final cardEndWithDigit4 = CardNumber(value: '1111 2222 3333 4444');
+      final result = usecase.takeLastDigit(cardEndWithDigit4);
+      expect(result, '4');
+    });
+    test('should return 4 on the last digit even dirty', () {
+      final cardEndWithDigit4Dirty = CardNumber(value: '1111 22292 3333s4444a');
+      final result = usecase.takeLastDigit(cardEndWithDigit4Dirty);
+      expect(result, '4');
+    });
+    test('should return 0 on the last digit', () {
+      final cardEndWithDigit0 = CardNumber(value: '1111 2232 4431 0110');
+      final result = usecase.takeLastDigit(cardEndWithDigit0);
+      expect(result, '0');
+    });
+    test('should return 0 on the last digit even dirty', () {
+      final cardEndWithDigit0Dirty = CardNumber(value: '1111 2232w4431 0110ww');
+      final result = usecase.takeLastDigit(cardEndWithDigit0Dirty);
+      expect(result, '0');
+    });
+  });
+
+  // END OF TEST SUIT
 }
+
+
 // O Mod 10 é um algoritmo para validação de cartões que é utilizado pela 
 // maioria das bandeiras em todo o mundo. A seguir mostro como utilizar 
 // o algoritmo para validar a numeração do cartão.
