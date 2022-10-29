@@ -30,7 +30,9 @@ class _AddCardPageState extends State<AddCardPage> {
       body: SingleChildScrollView(
         child: Column(
           children: const [
-            CardWidget(),
+            CardWidget(
+              cardNumber: '4410 1251 5541 6060',
+            ),
             SizedBox(height: 25),
             FormWidget(),
           ],
