@@ -1,6 +1,6 @@
 // ignore_for_file: comment_references
 
-import 'package:my_wallet/add_wallet/value_objects/card_number_value_object.dart.dart';
+import 'package:my_wallet/add_card/value_objects/card_number_value_object.dart.dart';
 
 /// This will suport all validations and methods that a [CardNumber] needs
 class CardNumerUsecase {

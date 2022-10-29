@@ -1,4 +1,4 @@
-import 'package:my_wallet/add_wallet/value_objects/card_number_value_object.dart.dart';
+import 'package:my_wallet/add_card/value_objects/card_number_value_object.dart.dart';
 
 /// this class represents a card complete, with all your infos
 class CardEntity {
